@@ -90,12 +90,6 @@ class TeamController {
   async delete(req, res) {
     const { id } = req.params;
 
-    if (!(await schema.isValid)) {
-      return res.status(400).json({
-        error: "Validation fails!",
-      });
-    }
-
     const member = await Team.findByIdAndDelete(id);
 
     return res.status(200).json(member);
