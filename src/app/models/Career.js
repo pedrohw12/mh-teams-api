@@ -18,15 +18,15 @@ const CareerSchema = new mongoose.Schema({
     required: true,
   },
   responsibilities: {
-    type: String,
+    type: Array,
     required: true,
   },
   requirements: {
-    type: String,
+    type: Array,
     required: true,
   },
   niceToHave: {
-    type: String,
+    type: Array,
     required: false,
   },
   createdAt: {

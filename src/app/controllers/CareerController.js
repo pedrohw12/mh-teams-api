@@ -29,8 +29,8 @@ class CareerController {
       period: Yup.string().required(),
       location: Yup.string().required(),
       salary: Yup.string().required(),
-      responsibilities: Yup.string().required(),
-      requirements: Yup.string().required(),
+      responsibilities: Yup.array().required(),
+      requirements: Yup.array().required(),
     });
 
     if (!(await schema.isValid)) {
