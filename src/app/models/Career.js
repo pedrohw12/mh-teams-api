@@ -17,6 +17,10 @@ const CareerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    required: false,
+  },
   responsibilities: {
     type: String,
     required: true,
