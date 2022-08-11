@@ -1,4 +1,6 @@
 const express = require("express");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 const routes = express.Router();
 
@@ -7,6 +9,7 @@ const CareerController = require("./app/controllers/CareerController");
 
 routes.get("/members", TeamController.index);
 routes.post("/members", TeamController.create);
+routes.post("/members/:memberName", upload.single("file"), TeamController.uploadFile);
 routes.put("/members/:id", TeamController.update);
 routes.delete("/members/:id", TeamController.delete);
 

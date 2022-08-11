@@ -1,4 +1,5 @@
 const Team = require("../models/Team");
+const AWS = require("../../libs/aws");
 const Yup = require("yup");
 
 class TeamController {
@@ -14,14 +15,13 @@ class TeamController {
   }
 
   async create(req, res) {
-    const { name, role, socialMediaUrl, description, imgUrl } = req.body;
+    const { name, role, socialMediaUrl, description } = req.body;
 
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       role: Yup.string().required(),
       socialMediaUrl: Yup.string().required(),
       description: Yup.string().required(),
-      imgUrl: Yup.string().required(),
     });
 
     if (!(await schema.isValid)) {
@@ -35,7 +35,6 @@ class TeamController {
       role,
       socialMediaUrl,
       description,
-      imgUrl,
     });
 
     return res.status(200).json(member);
@@ -57,14 +56,13 @@ class TeamController {
 
   async update(req, res) {
     const { id } = req.params;
-    const { name, role, socialMediaUrl, description, imgUrl } = req.body;
+    const { name, role, socialMediaUrl, description } = req.body;
 
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       role: Yup.string().required(),
       socialMediaUrl: Yup.string().required(),
       description: Yup.string().required(),
-      imgUrl: Yup.string().required(),
     });
 
     if (!(await schema.isValid)) {
@@ -78,7 +76,6 @@ class TeamController {
       role,
       socialMediaUrl,
       description,
-      imgUrl,
     };
 
     const member = await Team.findByIdAndUpdate(id, data, {
@@ -87,6 +84,37 @@ class TeamController {
 
     return res.status(200).json(member);
   }
+
+  onComplete(err, data) {
+    console.log(`## [AWS] onComplete ##`);
+    if (err) {
+      console.error(`> Error: ${JSON.stringify(err, null, 2)}`);
+    } else {
+      console.log(`> Success: ${JSON.stringify(data, null, 2)}`);
+    }
+  }
+
+  async uploadFile(req, res) {
+    console.log(req.file)
+
+    if (!req.file) {
+      return res.status(404).json({ error: "No file was uploaded" });
+    }
+    const file = req.file;
+
+    const S3 = new AWS.S3();
+    S3.upload(
+      {
+        bucketName: "website-general-assets",
+        originalFileName: `${req.file.path}`,
+        targetFileName: "images/team/dani.jpg",
+      },
+      // this.onComplete()
+    );
+
+    return res.status(200);
+  }
+
   async delete(req, res) {
     const { id } = req.params;
 
